@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private EditText mSearchBoxEditText;
     private TextView mUrlDisplayTextView;
     private TextView mSearchResultsTextView;
+    // TODO (14) Create a variable to store a reference to the error message TextView
+    private TextView mErrorMessageDisplay;
+
+    // TODO (20) Create a ProgressBar variable to store a reference to the ProgressBar
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
         mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);
         mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
+
+        // TODO (15) Get a reference to the error TextView using findViewById
+        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+
+        // TODO (21) Get a reference to the ProgressBar using findViewById
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
     }
 
@@ -53,9 +66,45 @@ public class MainActivity extends AppCompatActivity {
         }
         */
     }
+    // TODO (16) Create a method called showJsonDataView to show the data and hide the error
+    /**
+     * This method will make the View for the JSON data visible and
+     * hide the error message.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't
+     * need to check whether each view is currently visible or invisible.
+     */
+    private void showJsonDataView() {
+        // First, make sure the error is invisible
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        // Then, make sure the JSON data is visible
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+    }
+
+    // TODO (17) Create a method called showErrorMessage to show the error and hide the data
+    /**
+     * This method will make the error message visible and hide the JSON
+     * View.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't
+     * need to check whether each view is currently visible or invisible.
+     */
+    private void showErrorMessage() {
+        // First, hide the currently visible data
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        // Then, show the error
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
 
     // TODO (4) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
     public class GithubQuerryTask extends AsyncTask <URL, Void, String>{
+
+        // TODO (22) Override onPreExecute to set the loading indicator to visible
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
 
         // TODO (5) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
 
@@ -74,8 +123,17 @@ public class MainActivity extends AppCompatActivity {
         // TODO (6) Override onPostExecute to display the results in the TextView
         @Override
         protected void onPostExecute(String s){
+
+            // TODO (23) As soon as the loading is complete, hide the loading indicator
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            
             if (s!= null && !s.equals("")){
+                // TODO (19) Call showJsonDataView if we have valid, non-null results
+                showJsonDataView();
                 mSearchResultsTextView.setText(s);
+            } else {
+                // TODO (18) Call showErrorMessage if the result is null in onPostExecute
+                showErrorMessage();
             }
         }
 

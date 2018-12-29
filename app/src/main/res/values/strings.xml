@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Internet Connect</string>
+    <!--TODO (9) A string to say that an error has occurred. -->
+    <string name="error_message">Failed to get results. Please try again.</string>
+
 </resources>
